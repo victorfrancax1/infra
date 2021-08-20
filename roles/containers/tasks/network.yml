@@ -1,0 +1,27 @@
+---
+- name: Make sure that the docker folders exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    state: directory
+  loop:
+    - "{{ docker_compose_dir }}/network"
+    - "{{ docker_dir }}/pihole/unbound.conf.d"
+
+- name: Install pihole template
+  template:
+    src: templates/pi-hole.conf
+    dest: "{{ docker_dir }}/pihole/unbound.conf.d/pi-hole.conf"
+    mode: og=rx,u=
+  notify: restart_pihole
+
+- name: Copy the compose file
+  template:
+    src: templates/compose-network.yml
+    dest: "{{ docker_compose_dir }}/network/network.yml"
+
+- name: Docker-compose up
+  community.docker.docker_compose:
+    project_src: "{{ docker_compose_dir }}/network"
+    files: "network.yml"

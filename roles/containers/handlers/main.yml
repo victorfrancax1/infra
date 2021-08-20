@@ -1,0 +1,8 @@
+---
+- name: restart_pihole
+  community.docker.docker_compose:
+    project_src: "{{ docker_compose_dir }}/network"
+    files: "network.yml"
+    restarted: true
+    services:
+      - network_pihole

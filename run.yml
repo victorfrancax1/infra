@@ -1,0 +1,45 @@
+---
+#
+# Tasks and roles for all hosts
+#
+- hosts: fleet
+  gather_facts: no
+
+  pre_tasks:
+      - import_tasks: tasks/ssh_juggle_port.yml
+        tags:
+            - always
+            - port
+
+- hosts: fleet
+  become: yes
+
+  roles:
+      #
+      # Basics
+      #
+      - role: system
+        tags:
+            - system
+
+#      - role: neovim
+#        tags:
+#            - neovim
+
+      - role: geerlingguy.security
+        tags:
+            - security
+
+      - role: geerlingguy.docker
+        tags:
+            - docker
+
+#      - role: chriswayg.msmtp-mailer
+#        tags:
+#            - msmtp
+
+      - name: containers
+        tags:
+          - containers
+  handlers:
+    - include: roles/containers/handlers/main.yml
