@@ -34,12 +34,12 @@
         tags:
             - docker
 
-#      - role: chriswayg.msmtp-mailer
-#        tags:
-#            - msmtp
+      - role: geerlingguy.pip
+        tags:
+            - docker
 
       - name: containers
         tags:
           - containers
   handlers:
-    - include: roles/containers/handlers/main.yml
+    - include_tasks: roles/containers/handlers/main.yml

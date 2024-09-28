@@ -3,7 +3,7 @@
 #
 hostname: '{{ inventory_hostname }}'
 
-timezone: America/Sao_Paulo
+timezone: America/Toronto
 
 ntp_timezone: '{{ timezone }}'
 
@@ -11,13 +11,19 @@ locale: en_US.UTF-8
 
 keyboard_layout: us
 
-username: victor
+username: vic
 
 ssh_public_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINf+Mb/HfChOnFz7UtcQzcYBUrrrCWjWeljPB5fAdGoP"
 
 password: "{{ linux_pwd }}"
 
-shell: /usr/bin/fish
+shell: /usr/bin/bash
+
+# geerlingguy.pip
+pip_install_packages:
+  - name:
+    - docker
+    - docker-compose
 
 docker_dir: /opt/docker/data
 
@@ -25,22 +31,26 @@ docker_compose_dir: /opt/docker/compose
 
 storage_dir: /media
 
-dotfiles_repo: https://github.com/notthebee/dotfiles
+#dotfiles_repo:
 
 networks:
   lan:
     cidr: 192.168.0.0/24
     base: 192.168.0
     interface: enp1s0
+#  app:
+#    cidr: 10.20.0.0/24
+#    base: 10.20.0
+#    interface: enp1s0
   app:
-    cidr: 10.0.0.0/24
-    base: 10.0.0
+    cidr: 10.88.111.0/24
+    base: 10.88.111
+    interface: enp1s0
 
 #
 # Packages
 #
 extra_packages:
-    - fish
     - iperf3
     - speedtest-cli
     - htop
@@ -55,34 +65,9 @@ extra_packages:
     - lm-sensors
     - iotop
     - ncdu
-
-#
-# Email credentials (for notifications)
-#
-
-#email: moe@notthebe.ee
-#
-#email_login: '{{ email }}'
-#
-#email_smtp_host: smtp.mailbox.org
-#
-#email_smtp_port: 465
-#
-#email_smtp_port_startls: 587
-
-# MSMTP
-msmtp_accounts:
-    - account: mailbox
-      host: '{{ email_smtp_host }}'
-      port: '{{ email_smtp_port_startls }}'
-      auth: 'on'
-      from: '{{ email }}'
-      user: '{{ email }}'
-      password: '{{ email_password }}'
-
-msmtp_default_account: 'mailbox'
-
-msmtp_alias_default: '{{ email }}'
+    - tree
+    - cron
+    - net-tools
 
 #
 # SSH (geerlingguy.security)
@@ -99,13 +84,6 @@ security_autoupdate_reboot_time: '23:00'
 
 security_autoupdate_mail_on_error: false
 
-#update_utility: dnf-automatic
-#
-#update_service: dnf-automatic-install.timer
-#
-#update_conf_path: /etc/dnf/automatic.conf
-#
-
 #VPN
 wg_addresses: "10.66.210.171/32"
-wg_countries: "Brazil"
+wg_countries: "Canada"

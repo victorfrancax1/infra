@@ -1,75 +1,55 @@
 ---
-networks:
-  network_app:
-    external: true
-
 services:
-  nginxproxymanager:
-    container_name: nginxproxymanager
-    image: jc21/nginx-proxy-manager:latest
-    networks:
-      network_app:
-        ipv4_address: {{ networks.lan.base }}.24
-    volumes:
-      - "{{ docker_dir }}/nginxproxymanager/data:/data"
-      - "{{ docker_dir }}/nginxproxymanager/letsencrypt:/etc/letsencrypt"
-    restart: always
-
   jellyfin:
     container_name: jellyfin
     image: ghcr.io/linuxserver/jellyfin
-    networks:
-      network_app:
-        ipv4_address: {{ networks.lan.base }}.30
     volumes:
       - "{{ docker_dir }}/jellyfin:/config"
       - "{{ docker_dir }}/jellyfin/letsencrypt:/etc/letsencrypt"
-      - "{{ storage_dir }}_slow/Media/Transcodes:/config/data/transcodes"
-      - "{{ storage_dir }}/Media/Metadata:/metadata"
-      - "{{ storage_dir }}/Media/Cache:/data/Cache"
+      - "{{ storage_dir }}/media/Transcodes:/config/data/transcodes"
+      - "{{ storage_dir }}/media/Metadata:/metadata"
+      - "{{ storage_dir }}/media/Cache:/data/Cache"
       - "{{ storage_dir }}/media/movies:/data/Movies"
       - "{{ storage_dir }}/media/shows:/data/TV"
       - "/etc/localtime:/etc/localtime:ro"
     restart: always
 
-  prowlarr:
-    container_name: prowlarr
-    image: lscr.io/linuxserver/prowlarr:develop
-    networks:
-      network_app:
-        ipv4_address: {{ networks.lan.base }}.25
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ={{ timezone }}
-    volumes:
-      - "{{ docker_dir }}/prowlarr/config:/config"
-    restart: always
-
-  radarr:
-    container_name: radarr
-    image: lscr.io/linuxserver/radarr
-    network_mode: "service:prowlarr"
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ={{ timezone }}
-    volumes:
-      - "{{ docker_dir }}/radarr/config:/config"
-      - "{{ storage_dir }}/torrent/downloads:/downloads"
-      - "{{ storage_dir }}/media/movies:/media"
-    restart: always
-
-  sonarr:
-    container_name: sonarr
-    image: lscr.io/linuxserver/sonarr
-    network_mode: "service:prowlarr"
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ={{ timezone }}
-    volumes:
-      - "{{ docker_dir }}/sonarr/config:/config"
-      - "{{ storage_dir }}/torrent/downloads:/downloads"
-      - "{{ storage_dir }}/media/shows:/media"
-    restart: always
+#prowlarr:
+#  container_name: prowlarr
+#  image: lscr.io/linuxserver/prowlarr:develop
+#  networks: network_app
+#  environment:
+#    - PUID=1000
+#    - PGID=1000
+#    - TZ={{ timezone }}
+#  volumes:
+#    - "{{ docker_dir }}/prowlarr/config:/config"
+#  restart: always
+#
+#radarr:
+#  container_name: radarr
+#  image: lscr.io/linuxserver/radarr
+#  network_mode: "service:prowlarr"
+#  environment:
+#    - PUID=1000
+#    - PGID=1000
+#    - TZ={{ timezone }}
+#  volumes:
+#    - "{{ docker_dir }}/radarr/config:/config"
+#    - "{{ storage_dir }}/torrent/downloads:/downloads"
+#    - "{{ storage_dir }}/media/movies:/media"
+#  restart: always
+#
+#sonarr:
+#  container_name: sonarr
+#  image: lscr.io/linuxserver/sonarr
+#  network_mode: "service:prowlarr"
+#  environment:
+#    - PUID=1000
+#    - PGID=1000
+#    - TZ={{ timezone }}
+#  volumes:
+#    - "{{ docker_dir }}/sonarr/config:/config"
+#    - "{{ storage_dir }}/torrent/downloads:/downloads"
+#    - "{{ storage_dir }}/media/shows:/media"
+#  restart: always

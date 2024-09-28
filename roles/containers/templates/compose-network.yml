@@ -1,22 +1,10 @@
 ---
-networks:
-  app:
-    driver: macvlan
-    driver_opts:
-      parent: {{ networks.lan.interface }}
-    ipam:
-      config:
-        - subnet: {{ networks.lan.cidr }}
-
 services:
   gluetun:
       container_name: gluetun
       image: qmcgaw/gluetun
       cap_add:
         - NET_ADMIN
-      networks:
-        app:
-          ipv4_address: {{ networks.lan.base }}.66
       environment:
         - VPNSP=mullvad
         - VPN_TYPE=wireguard
@@ -42,33 +30,33 @@ services:
         - "{{ storage_dir }}/torrent/downloads:/downloads"
       restart: always
 
-  pihole:
-    container_name: pihole
-    image: cbcrowe/pihole-unbound:latest
-    networks:
-      app:
-        ipv4_address: {{ networks.lan.base }}.10
-    #hostname: ${HOSTNAME}
-    #domainname: ${DOMAIN_NAME}
-    ports:
-      #- 443:443/tcp
-      - 53:53/tcp
-      - 53:53/udp
-    environment:
-      - TZ={{ timezone }}
-      - WEBPASSWORD=blah123@
-      - WEBTHEME=default-dark
-      - REV_SERVER=true
-      - REV_SERVER_TARGET={{ ansible_default_ipv4.gateway }}
-      - REV_SERVER_DOMAIN=box
-      - REV_SERVER_CIDR={{ networks.lan.cidr }}
-      - DNS1=127.0.0.1#5335
-      - DNS2=127.0.0.1#5335
-      - DNSSEC=true
-      - DNSMASQ_LISTENING=single
-      - DNS_NAME:pihole.box
-    volumes:
-      - "{{ docker_dir }}/pihole/pihole:/etc/pihole"
-      - "{{ docker_dir }}/pihole/dnmasq-unbound:/etc/dnsmasq.d"
-      - "{{ docker_dir }}/pihole/unbound.conf.d/pi-hole.conf:/etc/unbound/unbound.conf.d/pi-hole.conf"
-    restart: always
+#  pihole:
+#    container_name: pihole
+#    image: cbcrowe/pihole-unbound:latest
+#    networks:
+#      app:
+#        ipv4_address: {{ networks.app.base }}.10
+#    #hostname: ${HOSTNAME}
+#    #domainname: ${DOMAIN_NAME}
+#    ports:
+#      #- 443:443/tcp
+#      - 53:53/tcp
+#      - 53:53/udp
+#    environment:
+#      - TZ={{ timezone }}
+#      - WEBPASSWORD=blah123@
+#      - WEBTHEME=default-dark
+#      - REV_SERVER=true
+#      - REV_SERVER_TARGET={{ ansible_default_ipv4.gateway }}
+#      - REV_SERVER_DOMAIN=box
+#      - REV_SERVER_CIDR={{ networks.app.cidr }}
+#      - DNS1=127.0.0.1#5335
+#      - DNS2=127.0.0.1#5335
+#      - DNSSEC=true
+#      - DNSMASQ_LISTENING=single
+#      - DNS_NAME:pihole.box
+#    volumes:
+#      - "{{ docker_dir }}/pihole/pihole:/etc/pihole"
+#      - "{{ docker_dir }}/pihole/dnmasq-unbound:/etc/dnsmasq.d"
+#      - "{{ docker_dir }}/pihole/unbound.conf.d/pi-hole.conf:/etc/unbound/unbound.conf.d/pi-hole.conf"
+#    restart: always
