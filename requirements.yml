@@ -4,6 +4,7 @@ roles:
     - name: geerlingguy.docker
     - name: geerlingguy.ntp
     - name: geerlingguy.pip
+    - name: geerlingguy.firewall
 
 collections:
     - name: community.docker

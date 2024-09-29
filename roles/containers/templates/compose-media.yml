@@ -1,8 +1,14 @@
 ---
+networks:
+  network_default:
+    external: true
+
 services:
   jellyfin:
     container_name: jellyfin
     image: ghcr.io/linuxserver/jellyfin
+    networks:
+      - network_default
     volumes:
       - "{{ docker_dir }}/jellyfin:/config"
       - "{{ docker_dir }}/jellyfin/letsencrypt:/etc/letsencrypt"

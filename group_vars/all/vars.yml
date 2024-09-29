@@ -25,6 +25,14 @@ pip_install_packages:
     - docker
     - docker-compose
 
+# geerlingguy.firewall
+firewall_allowed_tcp_ports:
+  - "80"
+  - "81"
+  - "443"
+  - "{{ security_ssh_port }}"
+firewall_flush_rules_and_chains: false
+
 docker_dir: /opt/docker/data
 
 docker_compose_dir: /opt/docker/compose

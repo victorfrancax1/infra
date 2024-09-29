@@ -30,6 +30,10 @@
         tags:
             - security
 
+      - role: geerlingguy.firewall
+        tags:
+            - firewall
+
       - role: geerlingguy.docker
         tags:
             - docker

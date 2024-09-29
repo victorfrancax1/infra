@@ -30,6 +30,18 @@ services:
         - "{{ storage_dir }}/torrent/downloads:/downloads"
       restart: always
 
+  nginxproxymanager:
+      container_name: nginxproxymanager
+      image: jc21/nginx-proxy-manager:latest
+      ports:
+        - '0.0.0.0:80:80'
+        - '81:81'
+        - '0.0.0.0:443:443'
+      volumes:
+        - "{{ docker_dir }}/nginxproxymanager/data:/data"
+        - "{{ docker_dir }}/nginxproxymanager/letsencrypt:/etc/letsencrypt"
+      restart: unless-stopped
+
 #  pihole:
 #    container_name: pihole
 #    image: cbcrowe/pihole-unbound:latest
