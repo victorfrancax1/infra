@@ -37,7 +37,7 @@ docker_dir: /opt/docker/data
 
 docker_compose_dir: /opt/docker/compose
 
-storage_dir: /media
+storage_dir: /data
 
 #dotfiles_repo:
 
@@ -76,21 +76,25 @@ extra_packages:
     - tree
     - cron
     - net-tools
+    - parted
 
 #
 # SSH (geerlingguy.security)
 #
 security_ssh_port: 69
-
 security_sudoers_passwordless: ['{{ username }}']
-
 security_autoupdate_reboot: true
-
 #security_autoupdate_mail_to: '{{ email }}'
-
 security_autoupdate_reboot_time: '23:00'
-
 security_autoupdate_mail_on_error: false
+
+#
+# disk
+#
+device_name: /dev/sdb
+mount_point: "{{ storage_dir }}"
+filesystem: ext4
+partition_number: 1
 
 #VPN
 wg_addresses: "10.66.210.171/32"

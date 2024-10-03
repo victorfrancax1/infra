@@ -1,0 +1,39 @@
+---
+- name: Create a new primary partition
+  community.general.parted:
+    device: "{{ device_name }}"
+    number: "{{ partition_number }}"
+    state: present
+
+- name: Create a filesystem on the new partition
+  filesystem:
+    fstype: "{{ filesystem }}"
+    dev: "{{ device_name }}{{ partition_number }}"
+
+- name: Create mount point directory
+  file:
+    path: "{{ mount_point }}"
+    state: directory
+    mode: '0755'
+
+- name: Get UUID of the formatted partition
+  command: blkid -s UUID -o value {{ device_name }}{{ partition_number }}
+  register: blkid_output
+
+- name: Set UUID fact
+  set_fact:
+    partition_uuid: "{{ blkid_output.stdout }}"
+
+- name: Mount the partition
+  mount:
+    path: "{{ mount_point }}"
+    src: "UUID={{ partition_uuid }}"
+    fstype: "{{ filesystem }}"
+    state: mounted
+
+- name: Add to fstab using UUID
+  mount:
+    path: "{{ mount_point }}"
+    src: "UUID={{ partition_uuid }}"
+    fstype: "{{ filesystem }}"
+    state: present
